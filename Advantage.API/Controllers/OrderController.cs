@@ -36,7 +36,7 @@ namespace Advantage.API.Controllers
                 TotalPages = totalPages
             };
             return Ok(response);
-        }
+        } 
 
         [HttpGet("ByState")]
         public IActionResult ByState()
