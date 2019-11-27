@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-//import 'rxjs/add/operator/map';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +13,11 @@ export class SalesDataService {
   }
 
   getOrdersByCustomer(n: number) {
-    return this._http.get('http//localhost:5000/api/order/ByCustomer/' + n);
+    return this._http.get('http://localhost:5000/api/order/ByCustomer/' + n);
   }
 
   getOrderByState() {
-    return this._http.get('http//localhost:5000/api/order/bystate/');
+    return this._http.get('http://localhost:5000/api/order/bystate/');
   }
 
 
