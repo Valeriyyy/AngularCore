@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SalesDataService } from 'src/app/services/sales-data.service';
 import * as moment from 'moment';
-
+import { from } from 'rxjs';
 
 /*const SAMPLE_BARCHART_DATA: any[] = [
   { data: [65, 59, 80, 81, 56, 54, 30], label: 'Q3 Sales' },
@@ -38,7 +38,7 @@ export class BarChartComponent implements OnInit {
       .subscribe(res => {
         //console.log(res['page']['data']);
         const localChartData = this.getChartData(<any> res);
-        console.log('localChartData:',localChartData);
+        //console.log('localChartData:', localChartData);
         this.barChartLabels = localChartData.map(x => x[0]).reverse();
         this.barChartData = [{ 'data': localChartData.map(x => x[1]), label: 'Sales'}];
       });

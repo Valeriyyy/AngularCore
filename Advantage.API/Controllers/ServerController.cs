@@ -13,6 +13,13 @@ namespace Advantage.API.Controllers
         {
             _ctx = ctx;
         }
+
+        [HttpGet]
+        public IActionResult Get() 
+        {
+            var response = _ctx.Servers.OrderBy(s => s.Id).ToList();
+            return Ok(response);
+        }
         
         [HttpGet("{id}", Name="GetServer")]
         public IActionResult Get(int id)
