@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LINE_CHART_COLORS } from '../../shared/chart.colors';
 import { SalesDataService } from 'src/app/services/sales-data.service';
 import * as moment from 'moment';
-import { map } from 'rxjs-compat/operators/map';
+import { map } from 'rxjs/operators/map';
 
 
 /*const LINE_CHART_SAMPLE_DATA: any[] = [
@@ -20,7 +20,7 @@ const LINE_CHART_LABELS: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 export class LineChartComponent implements OnInit {
 
   constructor(private _salesDataService: SalesDataService) { }
-  topCustomers: any[];
+  topCustomers: string[];
   allOrders: any[];
 
   lineChartData: any;
@@ -37,7 +37,13 @@ export class LineChartComponent implements OnInit {
     this._salesDataService.getOrders(1, 100).subscribe(res => {
       //console.log('getorders: ', res);
       this.allOrders = res['page']['data'];
-      console.log(this.allOrders);
+      console.log('orders', this.allOrders);
+      /*this._salesDataService.getOrdersByCustomer(3).subscribe(cus => {
+        this.topCustomers = cus.map(x => x['name']);
+        console.log(this.topCustomers);
+      });*/
+
+
       this._salesDataService.getOrdersByCustomer(3).subscribe(cus => {
         this.topCustomers = cus.map(x => x['name']);
         console.log('names', this.topCustomers);
@@ -49,22 +55,27 @@ export class LineChartComponent implements OnInit {
        }, []);
 
        let dates = allChartData.map(x => x['data']).reduce((a, i) => {
-          a.push(i.map( o => new Date(a[0])));
+          a.push(i.map( o => new Date(o[0])));
           return a;
        }, []);
 
-       console.log('dates: ', dates);
        dates = [].concat.apply([], dates);
+       //console.log('dates: ', dates);
 
-       const r = this.getCustomerOrdersByDates(allChartData, dates)['data'];
+       const r = this.getCustomerOrdersByDate(allChartData, dates)['date'];
+       console.log('r: ', r);
        this.lineChartLabels = r[0]['orders'].map(o => o['date']);
+       console.log('LINE CHART LABELS: ', this.lineChartLabels);
+
        this.lineChartData = [
          { 'data': r[0]['orders'].map(x => x['total']), 'label': r[0]['customer']},
          { 'data': r[1]['orders'].map(x => x['total']), 'label': r[1]['customer']},
          { 'data': r[2]['orders'].map(x => x['total']), 'label': r[2]['customer']}
        ];
+       console.log('LINE CHART DATA: ', this.lineChartData);
 
       });
+
     });
   }
 
@@ -80,14 +91,14 @@ export class LineChartComponent implements OnInit {
     return result;
   }
 
-  getCustomerOrdersByDates(orders: any, dates: any) {
+  getCustomerOrdersByDate(orders: any, dates: any) {
     // for each customer => for each date =>
     //{ data: [{'customer': 'asd', 'orders: [{'date': 'somedate', total: 434}]},{},{}]}
     const customers = this.topCustomers;
     const prettyDates = dates.map(x => this.toFriendlyDate(x));
     //get unique dates in sorted order
     const u = Array.from(new Set(prettyDates)).sort();
-
+    console.log('UUUUUUUU: ', u);
     //define our result object to return
     const result = {};
     const dataSets = result['date'] = [];
